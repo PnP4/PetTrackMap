@@ -1,5 +1,10 @@
 package com.ucsc.pnp.pettrack;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,9 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainView extends AppCompatActivity {
-
+    GoogleMap googleMap;
+    Marker petpointer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +33,10 @@ public class MainView extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        showLocation("He he");
 
     }
 
@@ -42,4 +61,23 @@ public class MainView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void showLocation(String petname){
+
+         LatLng newpsition = new LatLng(21 , 57);
+        if(googleMap!=null) {
+            petpointer = googleMap.addMarker(new MarkerOptions().position(newpsition).title(petname));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(newpsition.latitude, newpsition.longitude), 12.0f));
+        }
+    }
+    public class LocationReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "Intent Detected.", Toast.LENGTH_LONG).show();
+            showLocation("Pet Pet");
+        }
+    }
+
+   
+
 }
