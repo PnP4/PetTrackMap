@@ -74,10 +74,22 @@ public class MainView extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "Intent Detected.", Toast.LENGTH_LONG).show();
-            showLocation("Pet Pet");
+            showAlert("Pet NAme");
         }
     }
 
-   
+    public void showAlert(final String Petname){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainView.this).create();
+        alertDialog.setTitle("Pet Alert");
+        alertDialog.setMessage("Your pet is out of range :- PetName ::-- "+Petname);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        showLocation(Petname);
+                    }
+                });
+        alertDialog.show();
+    }
 
 }
